@@ -45,4 +45,24 @@ public class Todo extends BaseEntity {
         this.member = member;
     }
 
+    // 내용/날짜 수정 (null이면 기존 값 유지 = 부분 수정 가능)
+    public void update(String content, LocalDateTime date) {
+        if (content != null) {
+            this.content = content;
+        }
+        if (date != null) {
+            this.date = date;
+        }
+    }
+
+    // 완료 토글 (true ↔ false 뒤집기)
+    public void complete() {
+        this.isChecked = !this.isChecked;
+    }
+
+    // 이모지(회고) 변경
+    public void updateEmoji(String emoji) {
+        this.emoji = emoji;
+    }
+
 }

@@ -1,7 +1,6 @@
 package likelion.todo.domain.member.service;
 
-import likelion.todo.domain.member.dto.MemberRegisterRequestDTO;
-import likelion.todo.domain.member.dto.MemberRegisterResponseDTO;
+import likelion.todo.domain.member.dto.*;
 import likelion.todo.domain.member.entity.Member;
 import likelion.todo.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,21 @@ public class MemberService {
                 .password(req.password())
                 .build();
         memberRepository.save(member);
-
         return new MemberRegisterResponseDTO(member.getId());
+    }
+
+    public MemberLoginResponseDTO login(MemberLoginRequestDTO req){
+        Member member = memberRepository.findByUsername(req.username())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."));
+        if(!req.password().equals(member.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        }
+        return new MemberLoginResponseDTO(member.getId());
+    }
+
+    public MemberResponseDTO getMember(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."));
+        return new MemberResponseDTO(member.getUsername());
     }
 }
